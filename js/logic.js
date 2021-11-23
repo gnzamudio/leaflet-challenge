@@ -2,12 +2,12 @@ const url= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.g
 
 function getcolor(d){
     return d > 1000 ? '#800026' :
-    d > 90  ? '#BD0026' :
-    d > 80  ? '#E31A1C' :
-    d > 60  ? '#FC4E2A' :
-    d > 40   ? '#FD8D3C' :
-    d > 20   ? '#FEB24C' :
-    d > 10   ? '#FED976' :
+    d >= 90  ? '#BD0026' :
+    d >= 80  ? '#E31A1C' :
+    d >= 60  ? '#FC4E2A' :
+    d >= 40   ? '#FD8D3C' :
+    d >= 20   ? '#FEB24C' :
+    d >= 10   ? '#FED976' :
                '#FFEDA0';
 }
 
@@ -33,6 +33,26 @@ function createMap(earthquakes){
     L.control.layers(baseMap, overlayMap, {
         collapse: false
     }).addTo(map);
+
+    //add legend
+    var legend = L.control({position: 'bottomleft'});
+    legend.onAdd = function (map) {
+ 
+        var div = L.DomUtil.create('div', 'info legend'),
+        grades = [10, 20, 40, 60, 80, 90];
+
+
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getcolor(grades[i]) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+   
+            }
+            
+
+        return div;
+    };
+    legend.addTo(map);
 }
 
 // function for markers in map
